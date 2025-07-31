@@ -62,16 +62,13 @@ frappe.views.ListView = class extends frappe.views.ListView {
 	add_merge_button() {
 		if (!this.merge_button_added) {
 			// Check if global bulk merge capability is enabled
-			jailbreak
-				.assert_capability("global_bulk_merge")
-				.then(() => {
+			jailbreak.check_capability("global_bulk_merge").then((enabled) => {
+				if (enabled) {
 					this.page.add_action_item(__("Merge Selected"), () => {
 						frappe.ui.merge_records.merge_selected_records(this);
 					});
-				})
-				.catch(() => {
-					// Capability not enabled, don't show button
-				});
+				}
+			});
 			this.merge_button_added = true;
 		}
 	}
