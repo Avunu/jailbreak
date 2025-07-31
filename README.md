@@ -6,7 +6,7 @@ Add destructive superpowers to any Frappe site.
 
 ## Features
 
-Jailbreak provides several powerful capabilities that you probably don't want enabled on your Frappe sites... but if you do, they can be individually enabled/disabled:
+Jailbreak is a collection of various hacks, mods, and anti-features you probably don't want enabled on your Frappe sites... but if you do, they can be individually enabled in all their perilous grandeur:
 
 ### 🔀 Global Bulk Merge
 - **Description**: Merge multiple records across any DocType
