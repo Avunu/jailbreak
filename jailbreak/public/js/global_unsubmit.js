@@ -21,17 +21,20 @@ frappe.ui.form.Form = class extends frappe.ui.form.Form {
 	}
 
 	add_unsubmit_button() {
-		// Only add button once and only for submitted documents
-		if (this.unsubmit_button_added || !this.doc || this.doc.docstatus !== 1) {
+		// Reset button state on each refresh
+		this.unsubmit_button_added = false;
+		
+		// Only add button for submitted documents
+		if (!this.doc || this.doc.docstatus !== 1) {
 			return;
 		}
 
 		// Check if global unsubmit capability is enabled
 		jailbreak.check_capability("global_unsubmit").then((enabled) => {
-			if (enabled && this.doc && this.doc.docstatus === 1) {
+			if (enabled && this.doc && this.doc.docstatus === 1 && !this.unsubmit_button_added) {
 				this.add_custom_button(__("Unsubmit"), () => {
 					this.unsubmit_document();
-				}, __("Actions"));
+				});
 				this.unsubmit_button_added = true;
 			}
 		});

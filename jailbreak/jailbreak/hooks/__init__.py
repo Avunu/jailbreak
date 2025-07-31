@@ -37,14 +37,21 @@ def unsubmit_document(doctype, name):
 	if doc.docstatus != 1:
 		frappe.throw(_("Document {0} is not in submitted state").format(name))
 	
-	# Check if user has permission to unsubmit this document
+	# Check if user has permission to submit/unsubmit this document
 	if not frappe.has_permission(doctype, "submit", doc):
 		frappe.throw(_("Insufficient permissions to unsubmit {0} {1}").format(doctype, name))
+	
+	# Additional check: ensure the doctype supports submission
+	meta = frappe.get_meta(doctype)
+	if not meta.is_submittable:
+		frappe.throw(_("DocType {0} does not support submission").format(doctype))
 	
 	# Unsubmit the document
 	doc.docstatus = 0
 	doc.add_comment("Workflow", _("Document unsubmitted via Jailbreak"))
-	doc.save(ignore_permissions=True)
+	
+	# Save without ignore_permissions to respect normal save validations
+	doc.save()
 	
 	return {
 		"success": True,
