@@ -29,6 +29,12 @@ Jailbreak is a collection of various hacks, mods, and anti-features you probably
 - **Description**: Automatically enables full-width container layout
 - **Usage**: Automatically applied when the app is installed (no capability gate)
 
+### 📤 Global Unsubmit Documents
+- **Description**: Unsubmit any submitted document across all DocTypes
+- **Location**: Available as "Unsubmit" button in Actions menu of submitted documents
+- **Usage**: Click "Unsubmit" button on any submitted document to change its status from Submitted to Draft
+- **Safety**: Requires confirmation dialog and checks user permissions
+
 ## Configuration
 
 All capabilities (except full-width) must be explicitly enabled in **Jailbreak Settings** before they become available to users.
