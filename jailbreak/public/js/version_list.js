@@ -3,9 +3,8 @@
 frappe.listview_settings["Version"] = {
 	onload: function (doclist) {
 		// Check if version restore capability is enabled
-		jailbreak
-			.assert_capability("version_restore")
-			.then(() => {
+		jailbreak.check_capability("version_restore").then((enabled) => {
+			if (enabled) {
 				const action = () => {
 					const selected_docs = doclist.get_checked_items();
 					if (selected_docs.length > 0) {
@@ -65,9 +64,7 @@ frappe.listview_settings["Version"] = {
 					}
 				};
 				doclist.page.add_actions_menu_item(__("Restore"), action, false);
-			})
-			.catch(() => {
-				// Capability not enabled, don't show action
-			});
+			}
+		});
 	},
 };

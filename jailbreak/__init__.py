@@ -6,6 +6,7 @@ from jailbreak.jailbreak.doctype.jailbreak_settings.jailbreak_settings import (
 	assert_capability,
 	check_capability,
 	capability_name,
+	check_capability,
 )
 
 

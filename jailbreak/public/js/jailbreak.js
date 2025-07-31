@@ -1,26 +1,22 @@
 // Global jailbreak object for capability checking
 window.jailbreak = {
 	/**
-	 * Check if a jailbreak capability is enabled before using it
+	 * Check if a jailbreak capability is enabled (for UI decisions)
 	 * @param {string} capability - The capability to check
-	 * @returns {Promise<boolean>} - Promise that resolves to true if enabled
-	 * @throws {Error} - Throws error if capability is not enabled
+	 * @returns {Promise<boolean>} - Promise that resolves to true if enabled, false otherwise
 	 */
-	assert_capability: function (capability) {
-		return new Promise((resolve, reject) => {
+	check_capability: function (capability) {
+		return new Promise((resolve) => {
 			frappe.call({
-				method: "jailbreak.assert_capability",
+				method: "jailbreak.check_jailbreak_capability",
 				args: {
 					capability: capability,
 				},
 				callback: function (r) {
-					if (!r.exc) {
-						resolve(true);
-					}
+					resolve(r.message || false);
 				},
-				error: function (r) {
-					// The error is already handled by assert_capability throwing frappe.throw
-					reject(new Error(`Capability ${capability} not enabled`));
+				error: function () {
+					resolve(false);
 				},
 			});
 		});
