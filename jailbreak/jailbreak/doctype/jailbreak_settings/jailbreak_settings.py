@@ -9,7 +9,6 @@ from frappe.model.document import Document
 
 capability_name = Literal[
 	"global_bulk_merge", 
-	"global_unsubmit", 
 	"item_convert_to_variant", 
 	"version_restore",
 	"sales_invoice_calculate_outstanding",
@@ -23,7 +22,6 @@ capability_name = Literal[
 
 capabilities = {
 	"global_bulk_merge": "Bulk Merge",
-	"global_unsubmit": "Unsubmit",
 	"item_convert_to_variant": "Convert to Variant",
 	"version_restore": "Version Restore",
 	"sales_invoice_calculate_outstanding": "Sales Invoice Calculate Outstanding",
@@ -44,9 +42,9 @@ class JailbreakSettings(Document):
 
 	if TYPE_CHECKING:
 		from frappe.types import DF
+		from jailbreak.jailbreak.doctype.unsubmit_permission.unsubmit_permission import UnsubmitPermission
 
 		global_bulk_merge: DF.Check
-		global_unsubmit: DF.Check
 		item_convert_to_variant: DF.Check
 		version_restore: DF.Check
 		sales_invoice_calculate_outstanding: DF.Check
@@ -56,6 +54,7 @@ class JailbreakSettings(Document):
 		journal_entry_manually_clear: DF.Check
 		journal_entry_remove_clearance: DF.Check
 		bank_transaction_change_date: DF.Check
+		unsubmit_permissions: DF.Table[UnsubmitPermission]
 	# end: auto-generated types
 	pass
 
@@ -133,3 +132,42 @@ def check_capability(capability: capability_name) -> bool:
 
 	# Check if the capability is enabled
 	return bool(getattr(settings, capability, False))
+
+
+@frappe.whitelist()
+def check_unsubmit_permission(doctype: str) -> bool:
+	"""
+	Check if the current user has permission to unsubmit documents of the specified DocType.
+	
+	:param doctype: The DocType to check unsubmit permission for
+	:return: True if the user has permission, False otherwise
+	"""
+	try:
+		settings: JailbreakSettings = frappe.get_cached_doc("Jailbreak Settings")  # type: ignore
+	except frappe.DoesNotExistError:
+		return False
+	
+	# Get current user's roles
+	user_roles = frappe.get_roles(frappe.session.user)
+	
+	# Check if there's a matching permission for this doctype and user's roles
+	for permission in settings.unsubmit_permissions:
+		if permission.doctype_name == doctype and permission.role in user_roles:
+			return True
+	
+	return False
+
+
+@frappe.whitelist()
+def assert_unsubmit_permission(doctype: str) -> None:
+	"""
+	Assert that the current user has permission to unsubmit documents of the specified DocType.
+	
+	:param doctype: The DocType to check unsubmit permission for
+	:raises frappe.PermissionError: If the user doesn't have permission
+	"""
+	if not check_unsubmit_permission(doctype):
+		frappe.throw(
+			_("You don't have permission to unsubmit {0} documents").format(doctype),
+			exc=frappe.PermissionError,
+		)
