@@ -1,16 +1,18 @@
-import frappe
 import json
-from jailbreak.jailbreak.doctype.jailbreak_settings.jailbreak_settings import assert_capability
+
+import frappe
 from frappe import _
+
+from jailbreak import assert_jailbreak_capability
 
 
 @frappe.whitelist()
 def bulk_merge(doctype, rows):
-    # Check if global bulk merge capability is enabled
-    assert_capability("global_bulk_merge")
-    
-    from frappe.model.rename_doc import bulk_rename
+	# Check if global bulk merge capability is enabled
+	assert_jailbreak_capability("global_bulk_merge")
 
-    rows = json.loads(rows)
+	from frappe.model.rename_doc import bulk_rename
 
-    return bulk_rename(doctype, rows)
+	rows = json.loads(rows)
+
+	return bulk_rename(doctype, rows)

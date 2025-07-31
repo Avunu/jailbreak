@@ -1,7 +1,10 @@
+/* global jailbreak */
+
 frappe.listview_settings["Version"] = {
 	onload: function (doclist) {
 		// Check if version restore capability is enabled
-		jailbreak.assert_capability('version_restore')
+		jailbreak
+			.assert_capability("version_restore")
 			.then(() => {
 				const action = () => {
 					const selected_docs = doclist.get_checked_items();
@@ -15,7 +18,7 @@ frappe.listview_settings["Version"] = {
 									let body = (restored_items) => {
 										const html = restored_items.map((item) => {
 											const version = item.version || item;
-											const new_name = item.new_name || '';
+											const new_name = item.new_name || "";
 											if (new_name) {
 												return `<li>Version ${version} restored as <a href='/app/form/${new_name}'>${new_name}</a></li>`;
 											} else {
@@ -26,7 +29,9 @@ frappe.listview_settings["Version"] = {
 									};
 
 									let message = (title, items) => {
-										return items.length > 0 ? title + body(items) + "</ul>" : "";
+										return items.length > 0
+											? title + body(items) + "</ul>"
+											: "";
 									};
 
 									const { restored, invalid, failed } = r.message;
@@ -42,9 +47,14 @@ frappe.listview_settings["Version"] = {
 										__("Versions that failed to restore"),
 										failed
 									);
-									const summary = restored_summary + invalid_summary + failed_summary;
+									const summary =
+										restored_summary + invalid_summary + failed_summary;
 
-									frappe.msgprint(summary, __("Version Restoration Summary"), true);
+									frappe.msgprint(
+										summary,
+										__("Version Restoration Summary"),
+										true
+									);
 
 									if (restored.length > 0) {
 										doclist.refresh();

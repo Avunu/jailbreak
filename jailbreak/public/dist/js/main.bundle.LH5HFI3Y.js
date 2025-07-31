@@ -65,7 +65,7 @@
   };
 
   // ../jailbreak/jailbreak/public/js/full_width.js
-  if (!localStorage.hasOwnProperty("container_fullwidth")) {
+  if (!Object.prototype.hasOwnProperty.call(localStorage, "container_fullwidth")) {
     localStorage.container_fullwidth = "true";
     frappe.ui.toolbar.set_fullwidth_if_enabled();
   }
@@ -92,4 +92,4 @@
     }
   };
 })();
-//# sourceMappingURL=main.bundle.SDYEC4R4.js.map
+//# sourceMappingURL=main.bundle.LH5HFI3Y.js.map

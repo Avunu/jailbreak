@@ -1,3 +1,5 @@
+/* global jailbreak */
+
 frappe.provide("frappe.ui.merge_records");
 
 frappe.ui.merge_records = {
@@ -7,7 +9,7 @@ frappe.ui.merge_records = {
 			return;
 		}
 
-		let selected_docs = listview.get_checked_items().map(doc => doc.name);
+		let selected_docs = listview.get_checked_items().map((doc) => doc.name);
 
 		let d = new frappe.ui.Dialog({
 			title: __("Merge Records"),
@@ -17,32 +19,32 @@ frappe.ui.merge_records = {
 					fieldname: "merge_into",
 					fieldtype: "Select",
 					options: selected_docs,
-					reqd: 1
-				}
+					reqd: 1,
+				},
 			],
 			primary_action_label: __("Merge"),
 			primary_action: function () {
 				let merge_into = d.get_value("merge_into");
-				let docs_to_merge = selected_docs.filter(doc => doc !== merge_into);
+				let docs_to_merge = selected_docs.filter((doc) => doc !== merge_into);
 
 				frappe.call({
 					method: "jailbreak.jailbreak.hooks.bulk_merge",
 					args: {
 						doctype: listview.doctype,
-						rows: docs_to_merge.map(doc => [doc, merge_into, "true"])
+						rows: docs_to_merge.map((doc) => [doc, merge_into, "true"]),
 					},
 					callback: function (r) {
 						if (r.message) {
 							listview.clear_checked_items();
 							listview.refresh();
 						}
-					}
+					},
 				});
 				d.hide();
-			}
+			},
 		});
 		d.show();
-	}
+	},
 };
 
 // Override the ListView class
@@ -60,7 +62,8 @@ frappe.views.ListView = class extends frappe.views.ListView {
 	add_merge_button() {
 		if (!this.merge_button_added) {
 			// Check if global bulk merge capability is enabled
-			jailbreak.assert_capability('global_bulk_merge')
+			jailbreak
+				.assert_capability("global_bulk_merge")
 				.then(() => {
 					this.page.add_action_item(__("Merge Selected"), () => {
 						frappe.ui.merge_records.merge_selected_records(this);

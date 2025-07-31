@@ -8,12 +8,12 @@ app_license = "mit"
 app_include_js = "main.bundle.js"
 
 doctype_js = {
-    "Item": "public/js/item.js",
-    "Version": "public/js/version.js",
+	"Item": "public/js/item.js",
+	"Version": "public/js/version.js",
 }
 
 doctype_list_js = {
-    "Version": "public/js/version_list.js",
+	"Version": "public/js/version_list.js",
 }
 
 export_python_type_annotations = True
