@@ -29,9 +29,9 @@ frappe.ui.form.Form = class extends frappe.ui.form.Form {
 			return;
 		}
 
-		// Check if global unsubmit capability is enabled
-		jailbreak.check_capability("global_unsubmit").then((enabled) => {
-			if (enabled && this.doc && this.doc.docstatus === 1 && !this.unsubmit_button_added) {
+		// Check if user has unsubmit permission for this specific DocType
+		jailbreak.check_unsubmit_permission(this.doc.doctype).then((hasPermission) => {
+			if (hasPermission && this.doc && this.doc.docstatus === 1 && !this.unsubmit_button_added) {
 				this.add_custom_button(__("Unsubmit"), () => {
 					this.unsubmit_document();
 				});

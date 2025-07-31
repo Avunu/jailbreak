@@ -26,7 +26,7 @@
   "bank_transaction_column", 
   "bank_transaction_change_date",
   "items_section",
-  "global_unsubmit"
+  "unsubmit_permissions"
  ],
  "fields": [
   {
@@ -38,6 +38,13 @@
    "fieldname": "items_section",
    "fieldtype": "Section Break",
    "label": "Danger Zone"
+  },
+  {
+   "fieldname": "unsubmit_permissions",
+   "fieldtype": "Table",
+   "label": "Unsubmit Permissions",
+   "options": "Unsubmit Permission",
+   "description": "Configure which DocTypes and Roles can unsubmit documents"
   },
   {
    "fieldname": "doctype_features_section",
@@ -101,12 +108,6 @@
    "fieldname": "global_bulk_merge",
    "fieldtype": "Check",
    "label": "Allow Bulk Merge"
-  },
-  {
-   "default": "0",
-   "fieldname": "global_unsubmit",
-   "fieldtype": "Check",
-   "label": "Allow Unsubmit on Documents"
   },
   {
    "default": "0",

@@ -27,8 +27,9 @@ def unsubmit_document(doctype, name):
 	:param name: The name of the document to unsubmit
 	:return: Success message or raises exception
 	"""
-	# Check if global unsubmit capability is enabled
-	assert_capability("global_unsubmit")
+	# Check if user has unsubmit permission for this specific doctype
+	from jailbreak.jailbreak.doctype.jailbreak_settings.jailbreak_settings import assert_unsubmit_permission
+	assert_unsubmit_permission(doctype)
 	
 	# Get the document
 	doc = frappe.get_doc(doctype, name)
