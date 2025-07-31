@@ -1,8 +1,8 @@
 /* global jailbreak */
 
 /**
- * Global unsubmit functionality for all document types
- * Adds an "Unsubmit" button to all submitted documents when the capability is enabled
+ * Granular unsubmit functionality for submitted documents
+ * Adds an "Unsubmit" button to submitted documents when user has permission for that specific DocType
  */
 
 // Store original setup methods to extend them
