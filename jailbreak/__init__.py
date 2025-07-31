@@ -4,6 +4,7 @@ import frappe
 
 from jailbreak.jailbreak.doctype.jailbreak_settings.jailbreak_settings import (
 	assert_capability,
+	check_capability,
 	capability_name,
 	check_capability,
 )
@@ -15,13 +16,6 @@ def assert_jailbreak_capability(capability: capability_name) -> None:
 
 
 @frappe.whitelist()
-def check_jailbreak_capability(capability: capability_name) -> bool:
-	"""
-	Check if a jailbreak capability is enabled (for frontend use).
-
-	:param capability: The capability to check.
-	:type capability: capability_name
-	:return: True if the capability is enabled, False otherwise.
-	:rtype: bool
-	"""
-	return check_capability(capability)
+def check_capability(capability: capability_name) -> bool:
+	from jailbreak.jailbreak.doctype.jailbreak_settings.jailbreak_settings import check_capability as _check_capability
+	return _check_capability(capability)
