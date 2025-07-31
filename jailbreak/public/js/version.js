@@ -1,8 +1,5 @@
 /* global jailbreak */
 
-// Copyright (c) 2016, Frappe Technologies and contributors
-// For license information, please see license.txt
-
 frappe.ui.form.on("Version", {
 	refresh: function (frm) {
 		// Check if version restore capability is enabled
@@ -11,7 +8,7 @@ frappe.ui.form.on("Version", {
 			.then(() => {
 				if (frm.doc.restored) {
 					frm.add_custom_button(__("Open"), function () {
-						frappe.set_route("Form", frm.doc.deleted_doctype, frm.doc.new_name);
+						frappe.set_route("Form", frm.doc.ref_doctype, frm.doc.docname);
 					});
 				} else {
 					frm.add_custom_button(__("Restore"), function () {
