@@ -1,3 +1,5 @@
+<img src="https://github.com/user-attachments/assets/f0aa1054-51c1-41b3-b5ea-0111b1c67aef" alt="Deranged Frappe Barista" width="300">
+
 ### Jailbreak
 
 Add destructive superpowers to any Frappe site.
