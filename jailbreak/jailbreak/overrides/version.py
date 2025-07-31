@@ -1,0 +1,82 @@
+import frappe
+from frappe.model.document import Document
+from frappe.core.doctype.version.version import Version as BaseVersion
+from frappe.types import DF
+from frappe import _
+from frappe.desk.doctype.bulk_update.bulk_update import show_progress
+import json
+
+
+class Version(BaseVersion):
+    """Custom Version override to jailbreak with restore functionality."""
+    
+    # Custom fields from item.json
+    restored: DF.Check
+
+    @frappe.whitelist()
+    def restore(self, alert=True):
+        """Restore a version by creating a new document with the version data."""
+        
+        if self.restored:
+            frappe.throw(_("Version {0} Already Restored").format(self.name), exc=frappe.DocumentAlreadyRestored)
+        
+        # Parse the version data similar to deleted document
+        version_data: dict
+        data = self.data
+        if isinstance(data, str):
+            version_data = json.loads(data)
+        else:
+            frappe.throw(_("Invalid version data format"))
+        
+        # Update the document with version data
+        doc: Document
+        try:
+            doc = frappe.get_doc(self.ref_doctype, self.docname)
+            doc.update(version_data)
+            
+        except frappe.DocstatusTransitionError:
+            frappe.msgprint(_("Cancelled Document restored as Draft"))
+            doc.docstatus = 0
+            doc.save()
+        
+        doc.add_comment("Edit", _("restored from version {0} as {1}").format(self.name, doc.name))
+        
+        # Mark version as restored
+        self.set("restored", 1)
+        self.db_update()
+        
+        if alert:
+            frappe.msgprint(_("Version Restored as {0}").format(doc.name))
+        
+        return doc.name
+
+
+@frappe.whitelist()
+def bulk_restore(docnames):
+    """Bulk restore multiple versions."""
+    docnames = frappe.parse_json(docnames)
+    message = _("Restoring Version")
+    restored, invalid, failed = [], [], []
+    
+    for i, d in enumerate(docnames):
+        try:
+            show_progress(docnames, message, i + 1, d)
+            version: Version = Version("Version", d)
+            if version.restored:
+                invalid.append(d)
+                
+            # Restore the version
+            new_name = version.restore(alert=False)
+            frappe.db.commit()
+            restored.append({"version": d, "new_name": new_name})
+            
+        except frappe.DocumentAlreadyRestored:
+            frappe.clear_last_message()
+            invalid.append(d)
+            
+        except Exception:
+            frappe.clear_last_message()
+            failed.append(d)
+            frappe.db.rollback()
+    
+    return {"restored": restored, "invalid": invalid, "failed": failed}
