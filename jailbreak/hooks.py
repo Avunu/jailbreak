@@ -16,4 +16,6 @@ doctype_list_js = {
     "Version": "public/js/version_list.js",
 }
 
+export_python_type_annotations = True
+
 override_doctype_class = {"Version": "jailbreak.jailbreak.overrides.version.Version"}

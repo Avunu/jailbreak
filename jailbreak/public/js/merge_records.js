@@ -26,7 +26,7 @@ frappe.ui.merge_records = {
 				let docs_to_merge = selected_docs.filter(doc => doc !== merge_into);
 
 				frappe.call({
-					method: "little_cocalico.api.merge_records.bulk_merge",
+					method: "jailbreak.jailbreak.hooks.bulk_merge",
 					args: {
 						doctype: listview.doctype,
 						rows: docs_to_merge.map(doc => [doc, merge_into, "true"])
@@ -59,9 +59,16 @@ frappe.views.ListView = class extends frappe.views.ListView {
 
 	add_merge_button() {
 		if (!this.merge_button_added) {
-			this.page.add_action_item(__("Merge Selected"), () => {
-				frappe.ui.merge_records.merge_selected_records(this);
-			});
+			// Check if global bulk merge capability is enabled
+			jailbreak.assert_capability('global_bulk_merge')
+				.then(() => {
+					this.page.add_action_item(__("Merge Selected"), () => {
+						frappe.ui.merge_records.merge_selected_records(this);
+					});
+				})
+				.catch(() => {
+					// Capability not enabled, don't show button
+				});
 			this.merge_button_added = true;
 		}
 	}

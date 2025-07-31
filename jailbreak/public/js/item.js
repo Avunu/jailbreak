@@ -2,9 +2,16 @@
 frappe.ui.form.on('Item', {
     refresh: function (frm) {
         if (!frm.is_new()) {
-            frm.add_custom_button(__('Convert to Variant'), function () {
-                show_variant_dialog(frm);
-            }, __('Actions'));
+            // Check if the item convert to variant capability is enabled
+            jailbreak.assert_capability('item_convert_to_variant')
+                .then(() => {
+                    frm.add_custom_button(__('Convert to Variant'), function () {
+                        show_variant_dialog(frm);
+                    }, __('Actions'));
+                })
+                .catch(() => {
+                    // Capability not enabled, don't show button
+                });
         }
     }
 });

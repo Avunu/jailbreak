@@ -1,11 +1,11 @@
 import frappe
+import json
 from frappe.model.document import Document
 from frappe.core.doctype.version.version import Version as BaseVersion
 from frappe.types import DF
 from frappe import _
 from frappe.desk.doctype.bulk_update.bulk_update import show_progress
-import json
-
+from jailbreak import assert_capability
 
 class Version(BaseVersion):
     """Custom Version override to jailbreak with restore functionality."""
@@ -17,6 +17,14 @@ class Version(BaseVersion):
     def restore(self, alert=True):
         """Restore a version by creating a new document with the version data."""
         
+        # Check if the version restore capability is enabled
+        assert_capability("version_restore")
+        
+        # Check if the document exists
+        if not frappe.db.exists(self.ref_doctype, self.docname):
+            frappe.throw(_("Document {0} does not exist").format(self.docname))
+        
+        # Check if the version is already restored
         if self.restored:
             frappe.throw(_("Version {0} Already Restored").format(self.name), exc=frappe.DocumentAlreadyRestored)
         

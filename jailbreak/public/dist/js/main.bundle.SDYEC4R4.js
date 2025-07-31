@@ -24,7 +24,7 @@
           let merge_into = d.get_value("merge_into");
           let docs_to_merge = selected_docs.filter((doc) => doc !== merge_into);
           frappe.call({
-            method: "little_cocalico.api.merge_records.bulk_merge",
+            method: "jailbreak.jailbreak.hooks.bulk_merge",
             args: {
               doctype: listview.doctype,
               rows: docs_to_merge.map((doc) => [doc, merge_into, "true"])
@@ -53,8 +53,11 @@
     }
     add_merge_button() {
       if (!this.merge_button_added) {
-        this.page.add_action_item(__("Merge Selected"), () => {
-          frappe.ui.merge_records.merge_selected_records(this);
+        jailbreak.assert_capability("global_bulk_merge").then(() => {
+          this.page.add_action_item(__("Merge Selected"), () => {
+            frappe.ui.merge_records.merge_selected_records(this);
+          });
+        }).catch(() => {
         });
         this.merge_button_added = true;
       }
@@ -66,5 +69,27 @@
     localStorage.container_fullwidth = "true";
     frappe.ui.toolbar.set_fullwidth_if_enabled();
   }
+
+  // ../jailbreak/jailbreak/public/js/jailbreak.js
+  window.jailbreak = {
+    assert_capability: function(capability) {
+      return new Promise((resolve, reject) => {
+        frappe.call({
+          method: "jailbreak.assert_capability",
+          args: {
+            capability
+          },
+          callback: function(r) {
+            if (!r.exc) {
+              resolve(true);
+            }
+          },
+          error: function(r) {
+            reject(new Error(`Capability ${capability} not enabled`));
+          }
+        });
+      });
+    }
+  };
 })();
-//# sourceMappingURL=main.bundle.Y7YVQIDL.js.map
+//# sourceMappingURL=main.bundle.SDYEC4R4.js.map
