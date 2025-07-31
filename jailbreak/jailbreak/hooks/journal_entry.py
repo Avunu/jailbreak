@@ -1,14 +1,14 @@
 import frappe
 from frappe import _
 
-from jailbreak import assert_jailbreak_capability
+from jailbreak import assert_capability
 
 
 @frappe.whitelist()
 def manually_clear_journal_entry(journal_entry_name):
 	"""Manually clear a journal entry by finding matching bank transaction."""
 	# Check if the journal entry manually clear capability is enabled
-	assert_jailbreak_capability("journal_entry_manually_clear")
+	assert_capability("journal_entry_manually_clear")
 	
 	try:
 		# find a matching bank transaction
@@ -31,7 +31,7 @@ def manually_clear_journal_entry(journal_entry_name):
 def remove_clearance_date_journal_entry(journal_entry_name):
 	"""Remove clearance date from a journal entry."""
 	# Check if the journal entry remove clearance capability is enabled
-	assert_jailbreak_capability("journal_entry_remove_clearance")
+	assert_capability("journal_entry_remove_clearance")
 	
 	try:
 		frappe.db.set_value('Journal Entry', journal_entry_name, 'clearance_date', None)

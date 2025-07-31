@@ -1,14 +1,14 @@
 import frappe
 from frappe import _
 
-from jailbreak import assert_jailbreak_capability
+from jailbreak import assert_capability
 
 
 @frappe.whitelist()
 def set_clearance_date(payment_entry_name, clearance_date):
 	"""Set clearance date for a payment entry."""
 	# Check if the payment entry set clearance date capability is enabled
-	assert_jailbreak_capability("payment_entry_set_clearance_date")
+	assert_capability("payment_entry_set_clearance_date")
 	
 	try:
 		frappe.db.set_value('Payment Entry', payment_entry_name, 'clearance_date', clearance_date)

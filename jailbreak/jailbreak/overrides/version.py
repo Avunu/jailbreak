@@ -7,7 +7,7 @@ from frappe.desk.doctype.bulk_update.bulk_update import show_progress
 from frappe.model.document import Document
 from frappe.types import DF
 
-from jailbreak import assert_jailbreak_capability
+from jailbreak import assert_capability
 
 
 class Version(BaseVersion):
@@ -21,7 +21,7 @@ class Version(BaseVersion):
 		"""Restore a version by creating a new document with the version data."""
 
 		# Check if the version restore capability is enabled
-		assert_jailbreak_capability("version_restore")
+		assert_capability("version_restore")
 
 		# Check if the document exists
 		if not frappe.db.exists(self.ref_doctype, self.docname):

@@ -8,7 +8,7 @@ window.jailbreak = {
 	check_capability: function (capability) {
 		return new Promise((resolve) => {
 			frappe.call({
-				method: "jailbreak.check_jailbreak_capability",
+				method: "jailbreak.check_capability",
 				args: {
 					capability: capability,
 				},

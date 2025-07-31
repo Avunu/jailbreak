@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 import frappe
 from frappe import _
 
-from jailbreak import assert_jailbreak_capability
+from jailbreak import assert_capability
 
 if TYPE_CHECKING:
 	from erpnext.stock.doctype.item.item import Item
@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 @frappe.whitelist()
 def convert_to_variant(item: str, template: str, attribute_values: dict) -> bool:
 	# Check if the item convert to variant capability is enabled
-	assert_jailbreak_capability("item_convert_to_variant")
+	assert_capability("item_convert_to_variant")
 
 	try:
 		# Parse attribute_values if it's a string

@@ -1,14 +1,14 @@
 import frappe
 from frappe import _
 
-from jailbreak import assert_jailbreak_capability
+from jailbreak import assert_capability
 
 
 @frappe.whitelist()
 def change_bank_transaction_date(bank_transaction_name, date):
 	"""Change the date of a bank transaction."""
 	# Check if the bank transaction change date capability is enabled
-	assert_jailbreak_capability("bank_transaction_change_date")
+	assert_capability("bank_transaction_change_date")
 	
 	try:
 		frappe.db.set_value('Bank Transaction', bank_transaction_name, 'date', date)

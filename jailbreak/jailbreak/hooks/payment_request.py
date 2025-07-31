@@ -1,14 +1,14 @@
 import frappe
 from frappe import _
 
-from jailbreak import assert_jailbreak_capability
+from jailbreak import assert_capability
 
 
 @frappe.whitelist()
 def mark_payment_request_as_paid(payment_request_name):
 	"""Mark a payment request as paid."""
 	# Check if the payment request mark as paid capability is enabled
-	assert_jailbreak_capability("payment_request_mark_as_paid")
+	assert_capability("payment_request_mark_as_paid")
 	
 	try:
 		frappe.db.set_value('Payment Request', payment_request_name, 'status', 'Paid')
@@ -23,7 +23,7 @@ def mark_payment_request_as_paid(payment_request_name):
 def reinitiate_payment_request_charge(payment_request_name):
 	"""Re-initiate charge for a payment request."""
 	# Check if the payment request reinitiate charge capability is enabled
-	assert_jailbreak_capability("payment_request_reinitiate_charge")
+	assert_capability("payment_request_reinitiate_charge")
 	
 	try:
 		pr = frappe.get_doc('Payment Request', payment_request_name)
