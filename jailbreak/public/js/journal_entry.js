@@ -7,7 +7,7 @@ frappe.ui.form.on('Journal Entry', {
 			function () {
 				// find a matching bank transaction
 				frappe.call({
-					method: 'jailbreak.jailbreak.hooks.api.manually_clear_journal_entry',
+					method: 'jailbreak.jailbreak.hooks.journal_entry.manually_clear_journal_entry',
 					args: {
 						journal_entry_name: frm.doc.name
 					},
@@ -25,7 +25,7 @@ frappe.ui.form.on('Journal Entry', {
 			function () {
 				// find a matching bank transaction
 				frappe.call({
-					method: 'jailbreak.jailbreak.hooks.api.remove_clearance_date_journal_entry',
+					method: 'jailbreak.jailbreak.hooks.journal_entry.remove_clearance_date_journal_entry',
 					args: {
 						journal_entry_name: frm.doc.name
 					},

@@ -15,7 +15,7 @@ frappe.ui.form.on('Payment Entry', {
 			], function (values) {
 				// change the date
 				frappe.call({
-					method: 'jailbreak.jailbreak.hooks.api.set_clearance_date',
+					method: 'jailbreak.jailbreak.hooks.payment_entry.set_clearance_date',
 					args: {
 						payment_entry_name: frm.doc.name,
 						clearance_date: values.clearance_date

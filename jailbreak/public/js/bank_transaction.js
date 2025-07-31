@@ -15,7 +15,7 @@ frappe.ui.form.on('Bank Transaction', {
 			], function (values) {
 				// change the date
 				frappe.call({
-					method: 'jailbreak.jailbreak.hooks.api.change_bank_transaction_date',
+					method: 'jailbreak.jailbreak.hooks.bank_transaction.change_bank_transaction_date',
 					args: {
 						bank_transaction_name: frm.doc.name,
 						date: values.date

@@ -4,7 +4,7 @@ frappe.ui.form.on('Payment Request', {
 	refresh: function (frm) {
 		frm.add_custom_button(__('Mark as Paid'), function () {
 			frappe.call({
-				method: 'jailbreak.jailbreak.hooks.api.mark_payment_request_as_paid',
+				method: 'jailbreak.jailbreak.hooks.payment_request.mark_payment_request_as_paid',
 				args: {
 					payment_request_name: frm.doc.name
 				},
@@ -24,7 +24,7 @@ frappe.ui.form.on('Payment Request', {
 		) {
 			frm.add_custom_button(__('Re-Initiate Charge'), function () {
 				frappe.call({
-					method: 'jailbreak.jailbreak.hooks.api.reinitiate_payment_request_charge',
+					method: 'jailbreak.jailbreak.hooks.payment_request.reinitiate_payment_request_charge',
 					args: {
 						payment_request_name: frm.doc.name
 					},
