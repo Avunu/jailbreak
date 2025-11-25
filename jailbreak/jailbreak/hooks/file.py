@@ -73,7 +73,9 @@ def get_file_references(file_name: str) -> list[dict]:
 		)
 
 	# Search for any other references in the database
-	# This is a broad search across all doctypes that might have file fields
+	# Note: This is a broad search across all doctypes that might have file fields.
+	# For large databases, this could be slow. The search is limited to DocTypes with
+	# Attach or Attach Image fields, and errors are caught to avoid breaking the merge.
 	file_url = file_doc.file_url
 
 	# Get all DocTypes with attach or attach_image fields
@@ -101,8 +103,12 @@ def get_file_references(file_name: str) -> list[dict]:
 				}
 				if ref not in references:
 					references.append(ref)
-		except Exception:
+		except (frappe.DoesNotExistError, frappe.ValidationError, frappe.PermissionError):
 			# Skip if doctype doesn't exist or has issues
+			continue
+		except Exception as e:
+			# Log unexpected errors but continue processing other doctypes
+			frappe.log_error(f"Error searching {dt['parent']}: {str(e)}", "File Reference Search")
 			continue
 
 	return references
@@ -143,7 +149,14 @@ def update_file_reference(doctype: str, docname: str, fieldname: str | None, old
 				doc.set(fieldname, new_file_url)
 				doc.save(ignore_permissions=True)
 
-	except Exception as e:
+	except (frappe.DoesNotExistError, frappe.ValidationError) as e:
+		# Log expected errors (document doesn't exist, validation failed)
 		frappe.log_error(
 			f"Failed to update file reference in {doctype} {docname}: {str(e)}", "File Merge Error"
 		)
+	except Exception as e:
+		# Log and re-raise unexpected errors
+		frappe.log_error(
+			f"Unexpected error updating file reference in {doctype} {docname}: {str(e)}", "File Merge Error"
+		)
+		raise

@@ -114,25 +114,3 @@ def assert_capability(capability: capability_name) -> None:
 			_("The {0} capability is not enabled.").format(capability_label),
 			exc=frappe.PermissionError,
 		)
-
-
-@frappe.whitelist()
-def check_capability(capability: capability_name) -> bool:
-	"""
-	Check if a jailbreak capability is enabled without throwing errors.
-
-	:param capability: The capability to check.
-	:type capability: capability_names
-	:returns: True if the capability is enabled, False otherwise.
-	:rtype: bool
-	"""
-	try:
-		settings: JailbreakSettings = frappe.get_cached_doc("Jailbreak Settings")  # type: ignore
-	except frappe.DoesNotExistError:
-		return False
-
-	if capability not in capabilities:
-		return False
-
-	# Check if the capability is enabled
-	return bool(getattr(settings, capability, False))
