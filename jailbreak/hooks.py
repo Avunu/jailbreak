@@ -20,6 +20,7 @@ doctype_js = {
 
 doctype_list_js = {
 	"Version": "public/js/version_list.js",
+	"File": "public/js/file_list.js",
 }
 
 export_python_type_annotations = True
