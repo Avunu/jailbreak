@@ -38,16 +38,22 @@ def merge_files(source_file: str, target_file: str) -> dict:
 	file_path = source_file_doc.get_full_path()
 
 	# Use bulk_rename to merge the files (updates all references automatically)
+	# The third parameter "true" indicates merge=True (will merge instead of just renaming)
 	from frappe.model.rename_doc import bulk_rename
 
-	result = bulk_rename("File", [[source_file, target_file, "true"]])
+	bulk_rename("File", [[source_file, target_file, "true"]])
 
 	# Delete the physical file from filesystem if it exists
+	# Note: This happens after the database merge, so if it fails, the DB merge has succeeded
+	# but the physical file remains. This is logged but does not fail the merge operation.
 	if file_path and os.path.exists(file_path):
 		try:
 			os.remove(file_path)
 		except OSError as e:
-			frappe.log_error(f"Failed to delete file {file_path}: {str(e)}", "File Merge - Filesystem Cleanup")
+			frappe.log_error(
+				f"Failed to delete file {file_path}: {str(e)}. Database merge succeeded but physical file was not removed.",
+				"File Merge - Filesystem Cleanup",
+			)
 
 	return {
 		"success": True,
