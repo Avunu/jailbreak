@@ -31,12 +31,21 @@ def merge_files(source_file: str, target_file: str) -> dict:
 	if source_file == target_file:
 		frappe.throw(_("Cannot merge a file into itself"))
 
+	# Get file URLs before making any changes
+	source_file_doc = frappe.get_doc("File", source_file)
+	source_file_url = source_file_doc.file_url
+
+	target_file_doc = frappe.get_doc("File", target_file)
+	target_file_url = target_file_doc.file_url
+
 	# Get all documents that reference the source file
 	references = get_file_references(source_file)
 
 	# Replace all references to source_file with target_file
 	for ref in references:
-		update_file_reference(ref["doctype"], ref["docname"], ref["fieldname"], source_file, target_file)
+		update_file_reference(
+			ref["doctype"], ref["docname"], ref["fieldname"], source_file, source_file_url, target_file, target_file_url
+		)
 
 	# Delete the source file
 	frappe.delete_doc("File", source_file, force=True)
@@ -114,26 +123,28 @@ def get_file_references(file_name: str) -> list[dict]:
 	return references
 
 
-def update_file_reference(doctype: str, docname: str, fieldname: str | None, old_file: str, new_file: str):
+def update_file_reference(
+	doctype: str,
+	docname: str,
+	fieldname: str | None,
+	old_file: str,
+	old_file_url: str,
+	new_file: str,
+	new_file_url: str,
+):
 	"""
 	Update a file reference in a document.
 
 	:param doctype: DocType of the document
 	:param docname: Name of the document
 	:param fieldname: Field name containing the file reference (can be None)
-	:param old_file: Old file name or URL
+	:param old_file: Old file name
+	:param old_file_url: Old file URL
 	:param new_file: New file name
+	:param new_file_url: New file URL
 	"""
 	try:
 		doc = frappe.get_doc(doctype, docname)
-
-		# Get the new file URL
-		new_file_doc = frappe.get_doc("File", new_file)
-		new_file_url = new_file_doc.file_url
-
-		# Get old file URL
-		old_file_doc = frappe.get_doc("File", old_file)
-		old_file_url = old_file_doc.file_url
 
 		# Update attached_to references if this is a File doctype attachment
 		if hasattr(doc, "attached_to_doctype") and doc.attached_to_doctype == "File":
