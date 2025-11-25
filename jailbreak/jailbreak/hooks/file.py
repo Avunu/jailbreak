@@ -215,20 +215,24 @@ def update_file_reference(
 	"""
 	try:
 		doc = frappe.get_doc(doctype, docname)
+		updated = False
 
-		# Update attached_to references if this is a File doctype attachment
-		if hasattr(doc, "attached_to_doctype") and doc.attached_to_doctype == "File":
+		# Update attached_to references if this is a File doctype and it's attached to another File
+		if doctype == "File" and hasattr(doc, "attached_to_doctype") and doc.attached_to_doctype == "File":
 			if doc.attached_to_name == old_file:
 				doc.attached_to_name = new_file
-				doc.save()
-				return
+				updated = True
 
 		# Update field if specified
 		if fieldname:
 			current_value = doc.get(fieldname)
 			if current_value in [old_file_url, old_file]:
 				doc.set(fieldname, new_file_url)
-				doc.save()
+				updated = True
+
+		# Save if any updates were made
+		if updated:
+			doc.save()
 
 	except (frappe.DoesNotExistError, frappe.ValidationError) as e:
 		# Log expected errors (document doesn't exist, validation failed)
