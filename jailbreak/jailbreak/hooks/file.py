@@ -166,8 +166,9 @@ def update_file_reference(
 			f"Failed to update file reference in {doctype} {docname}: {str(e)}", "File Merge Error"
 		)
 	except Exception as e:
-		# Log and re-raise unexpected errors
+		# Log unexpected errors but don't break the merge operation
+		# Most references may still be updated successfully
 		frappe.log_error(
-			f"Unexpected error updating file reference in {doctype} {docname}: {str(e)}", "File Merge Error"
+			f"Unexpected error updating file reference in {doctype} {docname}: {str(e)}",
+			"File Merge Critical Error",
 		)
-		raise

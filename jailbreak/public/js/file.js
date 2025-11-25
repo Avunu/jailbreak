@@ -65,11 +65,6 @@ function show_merge_dialog(frm) {
 		primary_action: function () {
 			let target_file = merge_dialog.get_value("target_file");
 
-			if (target_file === frm.doc.name) {
-				frappe.msgprint(__("Cannot merge a file into itself"));
-				return;
-			}
-
 			// Show confirmation dialog
 			frappe.confirm(
 				__(
