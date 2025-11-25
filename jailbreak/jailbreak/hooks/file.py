@@ -40,7 +40,7 @@ def merge_files(source_file: str, target_file: str) -> dict:
 
 	# Use rename_doc with merge=True and force=True to merge the files
 	# This handles all reference updates automatically
-	result = rename_doc(
+	rename_doc(
 		doctype="File",
 		old=source_file,
 		new=target_file,
