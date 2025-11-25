@@ -12,6 +12,7 @@ capability_name = Literal[
 	"global_unsubmit", 
 	"item_convert_to_variant", 
 	"version_restore",
+	"file_merge",
 	"sales_invoice_calculate_outstanding",
 	"payment_request_mark_paid",
 	"payment_request_reinitiate_charge", 
@@ -26,6 +27,7 @@ capabilities = {
 	"global_unsubmit": "Unsubmit",
 	"item_convert_to_variant": "Convert to Variant",
 	"version_restore": "Version Restore",
+	"file_merge": "File Merge",
 	"sales_invoice_calculate_outstanding": "Sales Invoice Calculate Outstanding",
 	"payment_request_mark_paid": "Payment Request Mark as Paid",
 	"payment_request_reinitiate_charge": "Payment Request Re-Initiate Charge",
@@ -49,6 +51,7 @@ class JailbreakSettings(Document):
 		global_unsubmit: DF.Check
 		item_convert_to_variant: DF.Check
 		version_restore: DF.Check
+		file_merge: DF.Check
 		sales_invoice_calculate_outstanding: DF.Check
 		payment_request_mark_paid: DF.Check
 		payment_request_reinitiate_charge: DF.Check
