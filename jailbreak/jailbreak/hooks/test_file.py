@@ -9,15 +9,16 @@ from jailbreak.jailbreak.hooks.file import merge_files
 
 class TestFileMerge(FrappeTestCase):
 	def setUp(self):
-		# Enable file_merge capability
+		# Store original file_merge capability state and enable it
 		settings = frappe.get_single("Jailbreak Settings")
+		self._original_file_merge = settings.file_merge
 		settings.file_merge = 1
 		settings.save()
 
 	def tearDown(self):
-		# Disable file_merge capability
+		# Restore original file_merge capability state
 		settings = frappe.get_single("Jailbreak Settings")
-		settings.file_merge = 0
+		settings.file_merge = self._original_file_merge
 		settings.save()
 
 	def test_merge_files_basic(self):
