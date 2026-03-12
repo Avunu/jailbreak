@@ -5,7 +5,7 @@ app_description = "Add destructive superpowers to any Frappe site."
 app_email = "mail@avu.nu"
 app_license = "mit"
 
-app_include_js = "main.bundle.js"
+app_include_js = "jailbreak.bundle.js"
 
 doctype_js = {
 	"Item": "public/js/item.js",
