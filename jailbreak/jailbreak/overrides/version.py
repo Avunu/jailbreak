@@ -78,6 +78,7 @@ def bulk_restore(docnames):
 			version: Version = Version("Version", d)
 			if version.restored:
 				invalid.append(d)
+				continue
 
 			# Restore the version
 			new_name = version.restore(alert=False)

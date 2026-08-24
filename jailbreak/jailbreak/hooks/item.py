@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 import frappe
 from frappe import _
@@ -25,8 +25,8 @@ def convert_to_variant(item: str, template: str, attribute_values: dict) -> bool
 		frappe.db.set_value("Item", item, "variant_of", template)
 
 		# Get the source item and template
-		item_doc: Item = Item("Item", item)
-		template_doc: Item = Item("Item", template)
+		item_doc: Item = cast("Item", frappe.get_doc("Item", item))
+		template_doc: Item = cast("Item", frappe.get_doc("Item", template))
 
 		# Clear existing attributes
 		item_doc.attributes = []

@@ -8,7 +8,7 @@ from jailbreak import assert_capability
 def mark_payment_request_as_paid(payment_request_name):
 	"""Mark a payment request as paid."""
 	# Check if the payment request mark as paid capability is enabled
-	assert_capability("payment_request_mark_as_paid")
+	assert_capability("payment_request_mark_paid")
 	
 	try:
 		frappe.db.set_value('Payment Request', payment_request_name, 'status', 'Paid')
